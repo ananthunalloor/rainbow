@@ -22,5 +22,7 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+      - name: Check Node.js engine requirement
+        run: node ./tools/check-node-version.mjs
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify

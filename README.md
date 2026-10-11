@@ -28,6 +28,7 @@ See the [component inventory](docs/components/COMPONENT_INVENTORY.md) for the br
 corepack enable
 corepack prepare pnpm@10.15.1 --activate
 pnpm install
+pnpm run check:storybook-config
 pnpm run setup:git-hooks
 pnpm verify
 pnpm dev
@@ -81,7 +82,7 @@ Rainbow includes a first-class Storybook workshop for interactive component deve
 pnpm storybook
 ```
 
-Use the **Theme** toolbar to switch Light, Dark, and System themes, and use Controls to change component properties live. The **Components / Overlay controls** story also exposes direction and placement controls for testing LTR/RTL alignment. The **Rainbow / All Components / Gallery** story is the smoke-test page for the complete implemented component set.
+Use the **Theme** toolbar to switch Light, Dark, and System themes, and use Controls to change component properties live. The **Components / Overlay controls** story also exposes direction and placement controls for testing LTR/RTL alignment. Run `pnpm check:storybook-config` for a dependency-free check of story discovery, Lit class-field settings, registration coverage, and package side-effect metadata. The **Rainbow / All Components / Gallery** story is the smoke-test page for the complete implemented component set.
 
 For a framework-free browser page, including the same component set used by server-rendered applications:
 

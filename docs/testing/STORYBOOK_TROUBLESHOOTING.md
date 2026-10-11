@@ -45,4 +45,4 @@ If the Storybook sidebar is present but the canvas is empty:
 
 ## Tree-shaken custom-element registration
 
-The public `@rainbow/ui/auto` entrypoint intentionally defines custom elements and installs theme CSS. `package.json` must keep both the source entry (`./src/auto.ts`) and built entry (`./dist/auto.js`) in its `sideEffects` allow-list. Storybook avoids depending on that metadata by calling registration and theme functions directly in `.storybook/preview.ts`. `pnpm check:storybook-config` checks the story glob, registry coverage, and these initialization contracts without needing installed third-party packages.
+The public `@rainbow/ui/auto` entrypoint intentionally defines custom elements and installs theme CSS. `package.json` keeps both the source entry (`./src/auto.ts`) and built entry (`./dist/auto.js`) in its `sideEffects` allow-list. Storybook avoids depending on that metadata by calling registration and theme functions directly in `.storybook/preview.ts`. `pnpm check:storybook-config` checks the story glob, registry coverage, and these initialization contracts without needing installed third-party packages.

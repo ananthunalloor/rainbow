@@ -11,6 +11,11 @@ const [
   autoEntry,
   gallerySource,
   storyFiles,
+  tsconfigSource,
+  viteConfig,
+  vitestConfig,
+  sourceIndex,
+  readme,
 ] = await Promise.all([
     readFile(join(root, 'package.json'), 'utf8').then(JSON.parse),
     readFile(join(root, '.storybook/main.ts'), 'utf8'),
@@ -19,6 +24,11 @@ const [
     readFile(join(root, 'src/auto.ts'), 'utf8'),
     readFile(join(root, 'stories/AllComponents.stories.ts'), 'utf8'),
     readdir(join(root, 'stories')),
+    readFile(join(root, 'tsconfig.json'), 'utf8'),
+    readFile(join(root, 'vite.config.ts'), 'utf8'),
+    readFile(join(root, 'vitest.config.ts'), 'utf8'),
+    readFile(join(root, 'src/index.ts'), 'utf8'),
+    readFile(join(root, 'README.md'), 'utf8'),
   ]);
 
 const errors = [];
@@ -28,14 +38,18 @@ if (
   !sideEffects.includes('./src/auto.ts') ||
   !sideEffects.includes('./dist/auto.js')
 ) {
-  errors.push('package.json must preserve src/auto.ts and dist/auto.js as side-effectful entrypoints.');
+  errors.push(
+    'package.json must preserve src/auto.ts and dist/auto.js as side-effectful entrypoints.',
+  );
 }
 
 if (!mainConfig.includes("'../stories/**/*.stories.@(js|jsx|mjs|ts|tsx|mdx)'")) {
   errors.push('Storybook story glob must include JS, TS, JSX, TSX, MJS, and MDX story files.');
 }
 if (!mainConfig.includes('useDefineForClassFields: false')) {
-  errors.push('Storybook esbuild config must disable define semantics for Lit reactive class fields.');
+  errors.push(
+    'Storybook esbuild config must disable define semantics for Lit reactive class fields.',
+  );
 }
 if (!previewConfig.includes('defineRainbowComponents();')) {
   errors.push('Storybook preview must explicitly register Rainbow custom elements.');
@@ -43,8 +57,34 @@ if (!previewConfig.includes('defineRainbowComponents();')) {
 if (!previewConfig.includes('installRainbowTheme();')) {
   errors.push('Storybook preview must explicitly install theme tokens and CSS variables.');
 }
-if (!autoEntry.includes('defineRainbowComponents();') || !autoEntry.includes('installRainbowTheme();')) {
+if (
+  !autoEntry.includes('defineRainbowComponents();') ||
+  !autoEntry.includes('installRainbowTheme();')
+) {
   errors.push('The public auto entrypoint must register components and install theme tokens.');
+}
+
+for (const [name, config] of [
+  ['root TypeScript config', tsconfigSource],
+  ['Vite library config', viteConfig],
+  ['Vitest config', vitestConfig],
+]) {
+  if (
+    !config.includes('useDefineForClassFields: false') &&
+    !config.includes('"useDefineForClassFields": false')
+  ) {
+    errors.push(`${name} must disable define-style class fields for Lit reactive properties.`);
+  }
+}
+
+const sourceVersion = sourceIndex.match(/RAINBOW_UI_VERSION = '([^']+)'/)?.[1];
+if (sourceVersion !== packageJson.version) {
+  errors.push(
+    `package.json version (${packageJson.version}) differs from source version (${sourceVersion}).`,
+  );
+}
+if (!readme.includes(`Implemented components (${packageJson.version})`)) {
+  errors.push('README component version does not match package.json.');
 }
 
 const typedTags = [...registrySource.matchAll(/'((?:rainbow)-[a-z-]+)'\s*:/g)].map(
@@ -78,10 +118,14 @@ const registrationBody =
 const registrationCalls = [...registrationBody.matchAll(/\b(defineRainbow[A-Z]\w*)\(\)/g)].map(
   (match) => match[1],
 );
-const importedDefinitions = [...registrySource.matchAll(/import \{([^}]+)\} from '\.\/[^']+\.js';/g)]
+const importedDefinitions = [
+  ...registrySource.matchAll(/import \{([^}]+)\} from '\.\/[^']+\.js';/g),
+]
   .flatMap((match) => match[1].split(',').map((entry) => entry.trim().split(/\s+as\s+/)[0]))
   .filter((name) => name.startsWith('defineRainbow'));
-const missingRegistrationCalls = importedDefinitions.filter((name) => !registrationCalls.includes(name));
+const missingRegistrationCalls = importedDefinitions.filter(
+  (name) => !registrationCalls.includes(name),
+);
 if (missingRegistrationCalls.length) {
   errors.push(`Registry omits calls: ${missingRegistrationCalls.join(', ')}.`);
 }
@@ -89,7 +133,9 @@ if (new Set(registrationCalls).size !== registrationCalls.length) {
   errors.push('Registry contains duplicate registration calls.');
 }
 if (registrationCalls.length !== typedTags.length) {
-  errors.push(`Expected ${typedTags.length} registration calls; found ${registrationCalls.length}.`);
+  errors.push(
+    `Expected ${typedTags.length} registration calls; found ${registrationCalls.length}.`,
+  );
 }
 
 const stories = storyFiles.filter((file) => /\.stories\.(?:js|jsx|mjs|ts|tsx|mdx)$/.test(file));
