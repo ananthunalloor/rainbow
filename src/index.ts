@@ -1,4 +1,5 @@
 export { RainbowElement } from './core/rainbow-element.js';
+export { RainbowOverlayController } from './core/overlay.js';
 export * from './components/index.js';
 export { installRainbowTheme, setRainbowTheme } from './theme/index.js';
 export type { RainbowThemeMode } from './theme/index.js';

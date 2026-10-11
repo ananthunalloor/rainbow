@@ -1,6 +1,6 @@
 {
   "name": "@rainbow/ui",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "private": false,
   "description": "Framework-agnostic Web Components library built with Lit for any frontend stack.",
   "type": "module",

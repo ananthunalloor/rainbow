@@ -11,14 +11,15 @@
     <header><h1>Rainbow component gallery</h1><p>Plain HTML integration. No React, Vue, Svelte, or other framework required.</p></header>
     <section><h2>Actions</h2><div style="display:flex;gap:1rem;flex-wrap:wrap"><rainbow-button>Primary</rainbow-button><rainbow-button variant="secondary">Secondary</rainbow-button><rainbow-button variant="ghost">Ghost</rainbow-button><rainbow-button variant="danger">Danger</rainbow-button></div></section>
     <form style="display:grid;gap:1rem;max-width:36rem"><h2>Form controls</h2><rainbow-input name="email" label="Email" type="email" required placeholder="you@example.com"></rainbow-input><rainbow-textarea name="message" label="Message" rows="5"></rainbow-textarea><rainbow-select name="framework" label="Framework"><option value="react">React</option><option value="vue">Vue</option><option value="django">Django + HTMX</option></rainbow-select><rainbow-checkbox name="terms" value="accepted" label="Accept terms"></rainbow-checkbox><rainbow-button type="submit">Submit</rainbow-button></form>
+    <section><h2>Overlays</h2><div style="display:flex;gap:1rem;align-items:flex-start;min-height:12rem;flex-wrap:wrap"><rainbow-popover label="Open popover"><p>Popover content.</p></rainbow-popover><rainbow-menu label="Actions"><button role="menuitem">Edit</button><button role="menuitem">Delete</button></rainbow-menu><rainbow-tooltip content="Tooltip text"><button>Hover/focus</button></rainbow-tooltip><rainbow-button id="open-dialog">Open dialog</rainbow-button><rainbow-dialog id="gallery-dialog" label="Rainbow dialog"><p>Native dialog semantics with Rainbow styling.</p><rainbow-button type="button" onclick="document.getElementById('gallery-dialog').close()">Close</rainbow-button></rainbow-dialog></div></section>
     <section><h2>Interaction primitives</h2><div style="display:grid;gap:1rem;max-width:36rem">
       <rainbow-switch label="Enable notifications"></rainbow-switch>
       <rainbow-radio-group label="Preferred theme" value="system" orientation="horizontal"><rainbow-radio value="light" label="Light"></rainbow-radio><rainbow-radio value="dark" label="Dark"></rainbow-radio><rainbow-radio value="system" label="System"></rainbow-radio></rainbow-radio-group>
       <rainbow-field label="Account"><rainbow-input name="account" placeholder="account@example.com"></rainbow-input></rainbow-field>
       <rainbow-popover label="Open popover"><p>Popover content.</p></rainbow-popover>
-      <rainbow-dialog id="demo-dialog" label="Rainbow dialog"><p>Dialog content.</p><rainbow-button type="button" onclick="document.getElementById('demo-dialog').close()">Close</rainbow-button></rainbow-dialog>
-      <rainbow-button type="button" onclick="document.getElementById('demo-dialog').show()">Open dialog</rainbow-button>
     </div></section>
   </main>
 </body>
 </html>
+
+<script>document.getElementById('open-dialog')?.addEventListener('click',()=>document.getElementById('gallery-dialog')?.show());</script>

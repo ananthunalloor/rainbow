@@ -21,7 +21,7 @@ export const Gallery: Story = {
           <rainbow-radio value="system" label="System"></rainbow-radio>
         </rainbow-radio-group>
         <rainbow-field label="Account" description="A reusable field wrapper."><rainbow-input name="account"></rainbow-input></rainbow-field>
-        <rainbow-popover label="Open popover"><p>Popover content.</p></rainbow-popover>
+        <rainbow-popover label="Open popover"><p>Popover content.</p></rainbow-popover><rainbow-menu label="Actions"><button role="menuitem">Edit</button><button role="menuitem">Delete</button></rainbow-menu><rainbow-tooltip content="Tooltip text"><button>Hover/focus</button></rainbow-tooltip><rainbow-dialog label="Rainbow dialog"><p>Dialog content.</p></rainbow-dialog>
       </div></article>
     </section>
   `,
