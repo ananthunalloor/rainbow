@@ -13,6 +13,12 @@
       "command": "pnpm test:watch",
       "isBackground": true,
       "problemMatcher": []
+    },
+    {
+      "label": "storybook",
+      "type": "shell",
+      "command": "pnpm storybook",
+      "problemMatcher": []
     }
   ]
 }

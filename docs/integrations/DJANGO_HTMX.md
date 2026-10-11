@@ -1,114 +1,45 @@
-# Django + HTMX Integration
+# Django and HTMX Integration
 
-Rainbow can be used directly in Django templates and in Django applications that use HTMX. No React/Vue/Svelte runtime is required.
+Rainbow has no runtime dependency on Django or HTMX. Both integrations operate on normal HTML and DOM events.
 
-## 1. Static assets
+## Django templates
 
-Build Rainbow with the normal JavaScript package tooling and expose the resulting assets through Django's staticfiles system.
-
-A Django base template can load the bundle with Django's `{% static %}` tag:
+Django can render Rainbow elements directly:
 
 ```html
-{% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <link rel="stylesheet" href="{% static 'rainbow/rainbow.css' %}">
-  </head>
-  <body>
-    {% block content %}{% endblock %}
-    <script type="module" src="{% static 'rainbow/rainbow.js' %}"></script>
-  </body>
-</html>
+<rainbow-input name="email" label="Email" type="email" required></rainbow-input>
+<rainbow-button type="submit" variant="primary">Sign in</rainbow-button>
 ```
 
-The optional Django adapter may later provide `{% rainbow_assets %}` to avoid repeating these paths, but this is convenience only.
+The server remains responsible for URL routing, CSRF protection, authorization, validation, and response rendering.
 
-## 2. Plain Django template usage
+## HTMX
+
+Keep HTMX attributes on light-DOM application elements rather than relying on selectors inside a Rainbow component's Shadow DOM.
 
 ```html
-<form method="post">
-  {% csrf_token %}
-
-  <rainbow-input
-    name="email"
-    type="email"
-    label="Email"
-    required>
-  </rainbow-input>
-
-  <rainbow-button type="submit" variant="primary">
-    Sign in
-  </rainbow-button>
+<form hx-post="/profile" hx-target="#profile" hx-swap="outerHTML">
+  <rainbow-input name="display_name" label="Display name"></rainbow-input>
+  <rainbow-button type="submit">Save</rainbow-button>
 </form>
 ```
 
-The server remains authoritative for validation and security. Rainbow's client-side validation is an enhancement, not a replacement for Django validation.
+`rainbow-button[type="submit"]` calls `requestSubmit()` on its containing form. This allows normal `submit` events to reach the form and lets HTMX intercept the submission.
 
-## 3. HTMX fragment pattern
+HTMX content inside Shadow DOM is intentionally not a core Rainbow concern. If a future component needs HTMX processing inside its shadow root, it should use an optional adapter that explicitly calls the HTMX processing API for that root.
 
-A Django view can return a partial containing Rainbow elements:
+## Server-rendered fragments
+
+HTMX may replace a fragment containing Rainbow elements. Custom elements remain ordinary HTML nodes, so they can be upgraded after insertion without Django knowing anything about the component implementation.
+
+## Auto-boot entry
+
+For pages that do not already have a JavaScript framework, the optional `@rainbow/ui/auto` entry registers the supported custom elements and installs the default system theme when loaded in a browser. The core package itself remains side-effect free.
+
+This makes a Django template architecture straightforward:
 
 ```html
-<div id="account-settings">
-  <form
-    method="post"
-    hx-post="{% url 'account-settings' %}"
-    hx-target="#account-settings"
-    hx-swap="outerHTML">
-    {% csrf_token %}
-
-    <rainbow-input
-      name="display_name"
-      label="Display name"
-      value="{{ form.display_name.value|default:'' }}">
-    </rainbow-input>
-
-    <rainbow-button type="submit" variant="primary">
-      Save changes
-    </rainbow-button>
-  </form>
-</div>
+<script type="module" src="/static/rainbow/auto.js"></script>
 ```
 
-The response may contain a completely new `<rainbow-input>` or `<rainbow-button>`. Custom-element upgrade happens independently of HTMX.
-
-## 4. Forms and Django
-
-Rainbow form controls should use native form participation where appropriate. For form-associated custom elements, use `ElementInternals` rather than inventing a second serialization protocol.
-
-Django must still validate the submitted values on the server.
-
-## 5. CSRF
-
-Rainbow does not own CSRF handling. Django/HTMX configuration remains responsible for sending the CSRF token on unsafe requests.
-
-## 6. Shadow DOM rule
-
-Do not put HTMX request attributes inside Shadow DOM unless there is a specific component-level reason to do so.
-
-If this is required, an optional `@rainbow/htmx` integration can expose an explicit registration function:
-
-```ts
-registerRainbowHtmx(htmx);
-```
-
-Its responsibility is limited to integrating HTMX with Rainbow's Shadow DOM boundaries. The core package must remain HTMX-free.
-
-## 7. Recommended architecture
-
-```text
-Django URL/view
-      │
-      ├── full-page template
-      │       └── Rainbow custom elements
-      │
-      └── HTMX partial
-              └── Rainbow custom elements
-
-Browser
-  ├── HTMX performs HTTP + DOM swaps
-  └── Rainbow upgrades custom elements + handles component behavior
-```
-
-This gives Django/HTMX applications a progressive-enhancement path without requiring a JavaScript SPA architecture.
+A future `django-rainbow` package may provide a template tag for emitting this asset path, but Django is not part of the core package.

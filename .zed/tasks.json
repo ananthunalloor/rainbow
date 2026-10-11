@@ -10,5 +10,11 @@
     "command": "pnpm test:watch",
     "use_new_terminal": false,
     "allow_concurrent_runs": true
+  },
+  {
+    "label": "storybook",
+    "command": "pnpm storybook",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": true
   }
 ]

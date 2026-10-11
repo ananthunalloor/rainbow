@@ -56,3 +56,38 @@ The core package remains independent of Django and HTMX. Optional adapters may p
 - [`docs/architecture/INTEGRATION_MODEL.md`](docs/architecture/INTEGRATION_MODEL.md)
 - [`docs/architecture/BROWSER_RUNTIME_MATRIX.md`](docs/architecture/BROWSER_RUNTIME_MATRIX.md)
 - [`docs/testing/INTEGRATION_TEST_MATRIX.md`](docs/testing/INTEGRATION_TEST_MATRIX.md)
+
+## Core contract now available
+
+Rainbow 0.2 establishes the first reusable design-system primitives:
+
+- semantic design tokens and light/dark/system themes;
+- `RainbowElement` as the shared Web Component base;
+- `rainbow-button`;
+- `rainbow-input` with form-associated behavior;
+- typed Rainbow custom events;
+- a documented Django + HTMX integration model.
+
+The core package does not depend on Django, HTMX, React, Vue, Svelte, Solid, Angular, or Tailwind.
+
+## Component contract
+
+The first component contract is intentionally small: public attributes/properties, composed DOM events, semantic CSS variables, CSS parts, slots, native-first accessibility, and form participation through Web APIs. New components must conform before entering the supported component inventory.
+
+## Component lab
+
+Rainbow includes a first-class Storybook workshop for interactive component development:
+
+```bash
+pnpm storybook
+```
+
+Use the **Theme** toolbar to switch Light, Dark, and System themes, and use Controls to change component properties live. The **Rainbow / All Components / Gallery** story is the smoke-test page for the complete implemented component set.
+
+For a framework-free browser page, including the same component set used by server-rendered applications:
+
+```bash
+pnpm dev:gallery
+```
+
+Open `/all-components.html`. This path intentionally uses plain HTML and is representative of Django template usage.
