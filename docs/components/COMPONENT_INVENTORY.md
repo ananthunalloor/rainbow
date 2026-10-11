@@ -265,3 +265,8 @@ Charts and other high-dependency visualization components should be isolated pac
 - Mantine official extensions: current `mantine.dev/x/extensions/`.
 
 The upstream pages were reviewed on 2026-10-07 for this inventory. MUI currently exposes its components by Inputs, Data display, Feedback, Surfaces, Navigation, Layout, Utils, plus MUI X and Lab entries. Mantine currently exposes a Core catalogue plus official extensions; the extension catalogue includes dates, charts, schedule, code highlight, notifications, spotlight, carousel, lightbox, dropzone, navigation progress, modals, and rich text editing.
+
+
+## Interaction primitives milestone
+
+Implemented in Rainbow 0.4: `rainbow-radio`, `rainbow-radio-group`, `rainbow-switch`, `rainbow-field`, `rainbow-form`, `rainbow-dialog`, and `rainbow-popover`. Dialog/popover positioning and full focus-management hardening remain follow-up overlay work.
