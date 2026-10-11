@@ -41,6 +41,31 @@ export { RainbowSelect, defineRainbowSelect } from './select.js';
 export { RainbowSwitch, defineRainbowSwitch } from './switch.js';
 export { RainbowTextarea, defineRainbowTextarea } from './textarea.js';
 
+/** Map Rainbow custom-element tag names to their concrete public TypeScript APIs. */
+declare global {
+  interface HTMLElementTagNameMap {
+    'rainbow-accordion': RainbowAccordion;
+    'rainbow-alert': RainbowAlert;
+    'rainbow-button': RainbowButton;
+    'rainbow-checkbox': RainbowCheckbox;
+    'rainbow-context-menu': RainbowContextMenu;
+    'rainbow-dialog': RainbowDialog;
+    'rainbow-dropdown': RainbowDropdown;
+    'rainbow-field': RainbowField;
+    'rainbow-form': RainbowForm;
+    'rainbow-input': RainbowInput;
+    'rainbow-menu': RainbowMenu;
+    'rainbow-popover': RainbowPopover;
+    'rainbow-radio': RainbowRadio;
+    'rainbow-radio-group': RainbowRadioGroup;
+    'rainbow-select': RainbowSelect;
+    'rainbow-switch': RainbowSwitch;
+    'rainbow-tabs': RainbowTabs;
+    'rainbow-textarea': RainbowTextarea;
+    'rainbow-tooltip': RainbowTooltip;
+  }
+}
+
 export function defineRainbowComponents(): void {
   defineRainbowButton(); defineRainbowTabs(); defineRainbowAccordion(); defineRainbowAlert(); defineRainbowCheckbox(); defineRainbowDialog(); defineRainbowField(); defineRainbowForm();
   defineRainbowInput(); defineRainbowPopover(); defineRainbowMenu(); defineRainbowDropdown(); defineRainbowContextMenu(); defineRainbowRadio(); defineRainbowRadioGroup(); defineRainbowSelect();

@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
-import '../src/auto.js';
 
-type OverlayArgs = { label: string; placement: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end' };
+type OverlayArgs = { label: string; dialogLabel: string; modal: boolean; placement: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'; direction: 'ltr' | 'rtl' };
 const meta = {
   title: 'Components/Overlay controls',
   tags: ['autodocs'],
   render: (args: OverlayArgs) => html`
-    <div style="display:grid;gap:2rem;align-items:start;min-height:18rem;max-width:48rem">
+    <div dir=${args.direction} style="display:grid;gap:2rem;align-items:start;min-height:18rem;max-width:48rem">
       <p>Use the dropdown and context-menu triggers to exercise open, keyboard, outside-click, and focus behavior.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start">
         <rainbow-dropdown label=${args.label} placement=${args.placement}>
@@ -22,7 +21,7 @@ const meta = {
           const dialog = (event.currentTarget as HTMLElement).parentElement?.querySelector('rainbow-dialog') as (HTMLElement & { show: () => void }) | null;
           dialog?.show();
         }}>Open dialog</rainbow-button>
-        <rainbow-dialog label="Dialog example"><p>Dialog content.</p><rainbow-button @click=${(event: Event) => {
+        <rainbow-dialog .label=${args.dialogLabel} .modal=${args.modal}><p>Dialog content.</p><rainbow-button @click=${(event: Event) => {
           const dialog = (event.currentTarget as HTMLElement).closest('rainbow-dialog') as (HTMLElement & { close: () => void }) | null;
           dialog?.close();
         }}>Close</rainbow-button></rainbow-dialog>
@@ -36,9 +35,12 @@ const meta = {
   `,
   argTypes: {
     label: { control: 'text', description: 'Accessible label and trigger text for the dropdown.' },
+    dialogLabel: { control: 'text', description: 'Changes the dialog reactive label property at runtime.' },
+    modal: { control: 'boolean', description: 'Whether opening the dialog uses native showModal() or non-modal show().' },
     placement: { control: 'select', options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'] },
+    direction: { control: 'inline-radio', options: ['ltr', 'rtl'], description: 'Exercises logical start/end placement.' },
   },
-  args: { label: 'Dropdown actions', placement: 'bottom-start' },
+  args: { label: 'Dropdown actions', dialogLabel: 'Dialog example', modal: true, placement: 'bottom-start', direction: 'ltr' },
 } satisfies Meta<OverlayArgs>;
 export default meta;
 type Story = StoryObj<typeof meta>;

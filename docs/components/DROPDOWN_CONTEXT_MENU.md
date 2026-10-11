@@ -21,7 +21,7 @@ The trigger supports Enter, Space, ArrowDown, and ArrowUp. Menu navigation suppo
 </rainbow-context-menu>
 ```
 
-The browser context menu is suppressed only when the event originates within this component. The menu opens at the pointer location and is shifted into the viewport. Context menus should also have an alternate keyboard-accessible command path in the surrounding application.
+The browser context menu is suppressed only when the event originates within this component. The menu opens at the pointer location and is shifted into the viewport. Shared positioning considers the preferred side, flips to the opposite side when it fits better, supports all four horizontal/vertical alignments for side placements, and resolves top/bottom `start`/`end` according to inherited LTR/RTL direction. Context menus should also have an alternate keyboard-accessible command path in the surrounding application.
 
 ## Django and HTMX
 

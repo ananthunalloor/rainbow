@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
-import '../src/auto.js';
 
 const meta = {
   title: 'Rainbow / All Components',

@@ -38,7 +38,7 @@ Each implemented component should expose:
 - accessibility checks
 - slot examples where applicable
 
-The `Rainbow / All Components / Gallery` story is the smoke-test page for the complete implemented component set.
+The `Rainbow / Diagnostics / Runtime` story checks all 19 custom-element registrations and essential theme CSS variables. Use it first when the canvas is blank or components are unstyled. The `Rainbow / All Components / Gallery` story is the visual smoke-test page for the complete implemented component set.
 
 ## Framework-independent gallery
 

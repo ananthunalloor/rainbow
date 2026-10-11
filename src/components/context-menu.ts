@@ -36,7 +36,7 @@ export class RainbowContextMenu extends RainbowElement {
     void this.updateComplete.then(() => {
       const panel = this.shadowRoot?.querySelector<HTMLElement>('.panel');
       if (!panel) return;
-      positionRainbowFloatingElement(this, panel, { x: this.point.x, y: this.point.y, placement: 'bottom-start' });
+      positionRainbowFloatingElement(this, panel, { x: this.point.x, y: this.point.y, placement: 'bottom-start', direction: 'ltr' });
       this.focusItem(0);
     });
     this.dispatchRainbowEvent('rainbow-open', { x, y });

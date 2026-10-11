@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
-import '../src/auto.js';
 
 const meta = { title: 'Overlays/Workshop', render: () => html`
   <div style="display:flex;gap:1rem;align-items:flex-start;min-height:16rem">

@@ -1,6 +1,6 @@
 {
   "name": "@rainbow/ui",
-  "version": "0.7.0",
+  "version": "0.8.1",
   "private": false,
   "description": "Framework-agnostic Web Components library built with Lit for any frontend stack.",
   "type": "module",
@@ -45,14 +45,15 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "verify": "pnpm fmt:check && pnpm lint && pnpm typecheck && pnpm typecheck:storybook && pnpm test && pnpm build && pnpm build-storybook",
+    "verify": "pnpm fmt:check && pnpm lint && pnpm check:storybook-config && pnpm typecheck && pnpm typecheck:storybook && pnpm test && pnpm build && pnpm build-storybook",
     "setup:git-hooks": "node ./tools/install-git-hooks.mjs",
     "validate:branch": "sh ./tools/validate-branch.sh",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "dev:storybook": "storybook dev -p 6006",
     "dev:gallery": "vite --config examples/vite.config.ts",
-    "typecheck:storybook": "tsc -p tsconfig.storybook.json --noEmit"
+    "typecheck:storybook": "tsc -p tsconfig.storybook.json --noEmit",
+    "check:storybook-config": "node ./tools/check-storybook-config.mjs"
   },
   "publishConfig": {
     "access": "public"
@@ -74,5 +75,8 @@
   "dependencies": {
     "lit": "^3.3.0"
   },
-  "sideEffects": false
+  "sideEffects": [
+    "./src/auto.ts",
+    "./dist/auto.js"
+  ]
 }

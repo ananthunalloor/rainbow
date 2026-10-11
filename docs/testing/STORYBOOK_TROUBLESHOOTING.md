@@ -11,7 +11,7 @@ Do not remove this option as a local workaround. If the project changes its comp
 1. Run Storybook from the repository root: `pnpm storybook`.
 2. Make sure dependencies have been installed from the repository's lockfile (when present): `pnpm install --frozen-lockfile`.
 3. Check the browser console for the first error, not just later `Uncaught (in promise)` messages. A single failed custom-element update can prevent the affected story from rendering.
-4. `.storybook/preview.ts` imports `src/auto.ts`, which registers every implemented `rainbow-*` element and installs the default theme for every story.
+4. `.storybook/preview.ts` calls `defineRainbowComponents()` and `installRainbowTheme()` directly. This ensures the registry and theme setup cannot be discarded as a side-effect-only import during production bundling.
 5. Open **Rainbow / All Components** for the component catalogue. Open **Components / Button**, **Components / Input**, **Components / Overlay controls**, and other stories for isolated examples and Controls.
 6. Dialogs are intentionally closed until their trigger is activated; context menus open on right-click; tooltips open on hover/focus.
 
@@ -38,7 +38,11 @@ If the console says properties such as `open`, `modal`, or `label` on `rainbow-d
 If the Storybook sidebar is present but the canvas is empty:
 
 1. Check the first browser-console error; an exception during preview initialization can prevent every story from rendering.
-2. Confirm `.storybook/preview.ts` imports `../src/auto.js` and `src/auto.ts` calls `defineRainbowComponents()`.
+2. Confirm `.storybook/preview.ts` directly calls `defineRainbowComponents()` and `installRainbowTheme()`. The package manifest also marks `src/auto.ts` and published `dist/auto.js` as side-effectful entrypoints.
 3. Open **Rainbow / All Components** and check the registration status at the top of the story.
 4. Run `pnpm typecheck:storybook` and `pnpm build-storybook` after dependencies are installed. The All Components story is not a substitute for a production Storybook build.
 5. Clear Storybook/Vite caches after changing TypeScript class-field settings, then restart the dev server.
+
+## Tree-shaken custom-element registration
+
+The public `@rainbow/ui/auto` entrypoint intentionally defines custom elements and installs theme CSS. `package.json` must keep both the source entry (`./src/auto.ts`) and built entry (`./dist/auto.js`) in its `sideEffects` allow-list. Storybook avoids depending on that metadata by calling registration and theme functions directly in `.storybook/preview.ts`. `pnpm check:storybook-config` checks the story glob, registry coverage, and these initialization contracts without needing installed third-party packages.

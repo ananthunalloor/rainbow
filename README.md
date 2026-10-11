@@ -5,15 +5,15 @@ A framework-agnostic Web Components library built with Lit and TypeScript.
 Rainbow is designed to work from plain HTML and server-rendered templates through React, Vue, Svelte, Solid, Angular, Astro, Next.js, Nuxt, Django, and HTMX.
 
 
-### Disclosure and status components
+## Implemented components (0.8.1)
 
-- `rainbow-tabs` — accessible tabs with automatic/manual activation and horizontal/vertical navigation. See [TABS.md](docs/components/TABS.md).
-- `rainbow-accordion` — native `details`/`summary` disclosure group with optional multiple-open mode. See [ACCORDION.md](docs/components/ACCORDION.md).
-- `rainbow-alert` — semantic status message with configurable live region and optional dismissal. See [ALERT.md](docs/components/ALERT.md).
+Rainbow currently includes 19 custom elements:
 
-## Development status
+- **Forms:** `rainbow-button`, `rainbow-input`, `rainbow-textarea`, `rainbow-select`, `rainbow-checkbox`, `rainbow-radio`, `rainbow-radio-group`, `rainbow-switch`, `rainbow-field`, `rainbow-form`.
+- **Overlays and interactions:** `rainbow-dialog`, `rainbow-popover`, `rainbow-menu`, `rainbow-dropdown`, `rainbow-context-menu`, `rainbow-tooltip`.
+- **Disclosure and status:** `rainbow-tabs`, `rainbow-accordion`, `rainbow-alert`.
 
-This repository is currently at the foundation stage. No production component API has been introduced yet.
+See the [component inventory](docs/components/COMPONENT_INVENTORY.md) for the broader roadmap. “Implemented” indicates that a component exists in source and has a defined API; production readiness still depends on the documented browser and accessibility test matrices.
 
 ## Requirements
 
@@ -63,19 +63,11 @@ The core package remains independent of Django and HTMX. Optional adapters may p
 - [`docs/architecture/INTEGRATION_MODEL.md`](docs/architecture/INTEGRATION_MODEL.md)
 - [`docs/architecture/BROWSER_RUNTIME_MATRIX.md`](docs/architecture/BROWSER_RUNTIME_MATRIX.md)
 - [`docs/testing/INTEGRATION_TEST_MATRIX.md`](docs/testing/INTEGRATION_TEST_MATRIX.md)
+- [`docs/testing/POSITIONING_BROWSER_CHECKLIST.md`](docs/testing/POSITIONING_BROWSER_CHECKLIST.md)
 
-## Core contract now available
+## Current foundation
 
-Rainbow 0.2 establishes the first reusable design-system primitives:
-
-- semantic design tokens and light/dark/system themes;
-- `RainbowElement` as the shared Web Component base;
-- `rainbow-button`;
-- `rainbow-input` with form-associated behavior;
-- typed Rainbow custom events;
-- a documented Django + HTMX integration model.
-
-The core package does not depend on Django, HTMX, React, Vue, Svelte, Solid, Angular, or Tailwind.
+Rainbow provides semantic design tokens, light/dark/system themes, a Lit-based Web Component base class, form-associated controls where supported, composed DOM events, and shared overlay/positioning utilities. The public API remains native-Web-Platform-first: attributes and properties, DOM events, slots, CSS custom properties, and CSS parts. Framework support is through standard custom elements rather than framework-specific component wrappers.
 
 ## Component contract
 
@@ -89,7 +81,7 @@ Rainbow includes a first-class Storybook workshop for interactive component deve
 pnpm storybook
 ```
 
-Use the **Theme** toolbar to switch Light, Dark, and System themes, and use Controls to change component properties live. The **Rainbow / All Components / Gallery** story is the smoke-test page for the complete implemented component set.
+Use the **Theme** toolbar to switch Light, Dark, and System themes, and use Controls to change component properties live. The **Components / Overlay controls** story also exposes direction and placement controls for testing LTR/RTL alignment. The **Rainbow / All Components / Gallery** story is the smoke-test page for the complete implemented component set.
 
 For a framework-free browser page, including the same component set used by server-rendered applications:
 

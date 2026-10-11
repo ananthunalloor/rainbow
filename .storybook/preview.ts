@@ -1,9 +1,13 @@
 import type { Preview } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
-// Register custom elements once for every story. Keep the auto entrypoint here so all
-// story modules and the component catalogue use identical registration behavior.
-import '../src/auto.js';
+// Call registration functions directly instead of importing a side-effect-only entrypoint.
+// This prevents Vite/Rollup tree-shaking from removing registration/theme setup in builds.
+import { defineRainbowComponents } from '../src/components/index.js';
+import { installRainbowTheme } from '../src/theme/index.js';
+
+defineRainbowComponents();
+installRainbowTheme();
 
 const preview: Preview = {
   globalTypes: {
