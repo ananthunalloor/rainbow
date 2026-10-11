@@ -53,3 +53,4 @@ This serves `examples/all-components.html` as plain HTML. It is intentionally fr
 ## CI contract
 
 Storybook configuration, stories, and the framework-free gallery are included in `pnpm typecheck:storybook`. The normal `pnpm verify` pipeline runs this check in addition to the library typecheck, lint, tests, and build.
+For startup/rendering errors, especially Lit reactive-property class-field warnings, see [Storybook troubleshooting](./STORYBOOK_TROUBLESHOOTING.md).

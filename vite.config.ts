@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  // Keep Lit's reactive accessors compatible with class-field initialization.
+  esbuild: { tsconfigRaw: { compilerOptions: { useDefineForClassFields: false } } },
   build: {
     lib: {
       entry: {

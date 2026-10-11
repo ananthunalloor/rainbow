@@ -169,3 +169,175 @@ describe('Rainbow overlay infrastructure', () => {
     menu.remove();
   });
 });
+
+describe('Rainbow positioning and extended menus', () => {
+  it('exports dropdown and context menu components', async () => {
+    const { RainbowDropdown } = await import('../src/components/dropdown.js');
+    const { RainbowContextMenu } = await import('../src/components/context-menu.js');
+    expect(RainbowDropdown).toBeDefined();
+    expect(RainbowContextMenu).toBeDefined();
+  });
+
+  it('positions a floating panel within the viewport', async () => {
+    const { positionRainbowFloatingElement } = await import('../src/core/positioning.js');
+    const anchor = document.createElement('div');
+    const floating = document.createElement('div');
+    document.body.append(anchor, floating);
+    anchor.getBoundingClientRect = () => new DOMRect(280, 170, 30, 20);
+    floating.getBoundingClientRect = () => new DOMRect(0, 0, 100, 80);
+    positionRainbowFloatingElement(anchor, floating, { placement: 'bottom-start' });
+    expect(floating.style.position).toBe('fixed');
+    expect(Number.parseInt(floating.style.left, 10)).toBeGreaterThanOrEqual(8);
+    expect(Number.parseInt(floating.style.top, 10)).toBeGreaterThanOrEqual(8);
+    anchor.remove(); floating.remove();
+  });
+
+  it('opens dropdowns and exposes the menu role', async () => {
+    const { RainbowDropdown } = await import('../src/components/dropdown.js');
+    if (!customElements.get('rainbow-dropdown')) customElements.define('rainbow-dropdown', RainbowDropdown);
+    const dropdown = document.createElement('rainbow-dropdown');
+    dropdown.innerHTML = '<button role="menuitem">Edit</button><button role="menuitem">Delete</button>';
+    document.body.append(dropdown);
+    await dropdown.updateComplete;
+    dropdown.show();
+    await dropdown.updateComplete;
+    expect(dropdown.shadowRoot?.querySelector('[role="menu"]')).not.toBeNull();
+    expect(dropdown.open).toBe(true);
+    dropdown.hide(false);
+    dropdown.remove();
+  });
+});
+
+describe('Lit reactive-property compatibility', () => {
+  it('updates a rainbow-dialog when reactive class fields are assigned', async () => {
+    const { RainbowDialog } = await import('../src/components/dialog.js');
+    if (!customElements.get('rainbow-dialog')) {
+      customElements.define('rainbow-dialog', RainbowDialog);
+    }
+
+    const dialog = document.createElement('rainbow-dialog') as InstanceType<typeof RainbowDialog>;
+    document.body.append(dialog);
+    await dialog.updateComplete;
+
+    dialog.label = 'Updated dialog title';
+    await dialog.updateComplete;
+
+    expect(dialog.shadowRoot?.querySelector('h2')?.textContent).toBe('Updated dialog title');
+    expect(dialog.getAttribute('label')).toBe('Updated dialog title');
+
+    dialog.open = true;
+    dialog.modal = false;
+    await dialog.updateComplete;
+    expect(dialog.hasAttribute('open')).toBe(true);
+    expect(dialog.hasAttribute('modal')).toBe(false);
+
+    dialog.remove();
+  });
+
+  it('registers all implemented custom elements through the auto entrypoint', async () => {
+    await import('../src/auto.js');
+    const implementedTags = [
+      'rainbow-accordion',
+      'rainbow-alert',
+      'rainbow-button',
+      'rainbow-checkbox',
+      'rainbow-context-menu',
+      'rainbow-dialog',
+      'rainbow-dropdown',
+      'rainbow-field',
+      'rainbow-form',
+      'rainbow-input',
+      'rainbow-menu',
+      'rainbow-popover',
+      'rainbow-radio',
+      'rainbow-radio-group',
+      'rainbow-select',
+      'rainbow-switch',
+      'rainbow-tabs',
+      'rainbow-textarea',
+      'rainbow-tooltip',
+    ];
+
+    for (const tag of implementedTags) {
+      expect(customElements.get(tag), `${tag} should be registered`).toBeDefined();
+    }
+  });
+});
+
+
+describe('Rainbow disclosure and status components', () => {
+  it('registers and renders tabs, accordion, and alert', async () => {
+    const { RainbowTabs } = await import('../src/components/tabs.js');
+    const { RainbowAccordion } = await import('../src/components/accordion.js');
+    const { RainbowAlert } = await import('../src/components/alert.js');
+    if (!customElements.get('rainbow-tabs')) customElements.define('rainbow-tabs', RainbowTabs);
+    if (!customElements.get('rainbow-accordion')) customElements.define('rainbow-accordion', RainbowAccordion);
+    if (!customElements.get('rainbow-alert')) customElements.define('rainbow-alert', RainbowAlert);
+
+    const tabs = document.createElement('rainbow-tabs') as InstanceType<typeof RainbowTabs>;
+    tabs.innerHTML = '<button slot="tab">First</button><button slot="tab">Second</button><section slot="panel">First panel</section><section slot="panel">Second panel</section>';
+    const accordion = document.createElement('rainbow-accordion');
+    accordion.innerHTML = '<details open><summary>One</summary><p>One body</p></details><details><summary>Two</summary><p>Two body</p></details>';
+    const alert = document.createElement('rainbow-alert') as InstanceType<typeof RainbowAlert>;
+    alert.setAttribute('dismissible', '');
+    alert.textContent = 'Saved';
+    let dismissedEvent = false;
+    alert.addEventListener('rainbow-dismiss', () => { dismissedEvent = true; });
+    document.body.append(tabs, accordion, alert);
+    await Promise.all([tabs.updateComplete, accordion.updateComplete, alert.updateComplete]);
+    await Promise.resolve();
+
+    expect(tabs.querySelector('[slot="tab"]')?.getAttribute('role')).toBe('tab');
+    expect(tabs.querySelector('[slot="panel"]')?.getAttribute('role')).toBe('tabpanel');
+    expect(tabs.querySelectorAll('[slot="panel"][hidden]')).toHaveLength(1);
+    expect(alert.shadowRoot?.querySelector('[role="status"]')).not.toBeNull();
+    expect(accordion.querySelectorAll('details[open]')).toHaveLength(1);
+
+    const tabElements = [...tabs.querySelectorAll<HTMLElement>('[slot="tab"]')];
+    tabElements[0]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    expect(tabs.selectedIndex).toBe(1);
+    expect(tabElements[1]?.getAttribute('aria-selected')).toBe('true');
+
+    alert.shadowRoot?.querySelector<HTMLButtonElement>('button.dismiss')?.click();
+    await alert.updateComplete;
+    expect(alert.dismissed).toBe(true);
+    expect(dismissedEvent).toBe(true);
+    expect(alert.shadowRoot?.querySelector('.alert')).toBeNull();
+
+    tabs.remove();
+    accordion.remove();
+    alert.remove();
+  });
+
+  it('supports manual tab activation', async () => {
+    const { RainbowTabs } = await import('../src/components/tabs.js');
+    if (!customElements.get('rainbow-tabs')) customElements.define('rainbow-tabs', RainbowTabs);
+    const tabs = document.createElement('rainbow-tabs') as InstanceType<typeof RainbowTabs>;
+    tabs.activation = 'manual';
+    tabs.innerHTML = '<button slot="tab">One</button><button slot="tab">Two</button><section slot="panel">One</section><section slot="panel">Two</section>';
+    document.body.append(tabs);
+    await tabs.updateComplete;
+    await Promise.resolve();
+
+    const tabElements = [...tabs.querySelectorAll<HTMLElement>('[slot="tab"]')];
+    tabElements[0]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    expect(tabs.selectedIndex).toBe(0);
+    expect(document.activeElement).toBe(tabElements[1]);
+    tabElements[1]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    expect(tabs.selectedIndex).toBe(1);
+    expect(tabElements[1]?.getAttribute('aria-selected')).toBe('true');
+    tabs.remove();
+  });
+
+  it('allows multiple accordion sections when configured', async () => {
+    const { RainbowAccordion } = await import('../src/components/accordion.js');
+    if (!customElements.get('rainbow-accordion')) customElements.define('rainbow-accordion', RainbowAccordion);
+    const accordion = document.createElement('rainbow-accordion') as InstanceType<typeof RainbowAccordion>;
+    accordion.allowMultiple = true;
+    accordion.innerHTML = '<details open><summary>One</summary></details><details open><summary>Two</summary></details>';
+    document.body.append(accordion);
+    await accordion.updateComplete;
+    expect(accordion.querySelectorAll('details[open]')).toHaveLength(2);
+    accordion.remove();
+  });
+});

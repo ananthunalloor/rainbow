@@ -1,8 +1,9 @@
 import type { Preview } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
+// Register custom elements once for every story. Keep the auto entrypoint here so all
+// story modules and the component catalogue use identical registration behavior.
 import '../src/auto.js';
-import '../src/theme/index.js';
 
 const preview: Preview = {
   globalTypes: {

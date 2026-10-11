@@ -4,6 +4,13 @@ A framework-agnostic Web Components library built with Lit and TypeScript.
 
 Rainbow is designed to work from plain HTML and server-rendered templates through React, Vue, Svelte, Solid, Angular, Astro, Next.js, Nuxt, Django, and HTMX.
 
+
+### Disclosure and status components
+
+- `rainbow-tabs` — accessible tabs with automatic/manual activation and horizontal/vertical navigation. See [TABS.md](docs/components/TABS.md).
+- `rainbow-accordion` — native `details`/`summary` disclosure group with optional multiple-open mode. See [ACCORDION.md](docs/components/ACCORDION.md).
+- `rainbow-alert` — semantic status message with configurable live region and optional dismissal. See [ALERT.md](docs/components/ALERT.md).
+
 ## Development status
 
 This repository is currently at the foundation stage. No production component API has been introduced yet.

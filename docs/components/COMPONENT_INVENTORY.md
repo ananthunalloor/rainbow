@@ -270,3 +270,12 @@ The upstream pages were reviewed on 2026-10-07 for this inventory. MUI currently
 ## Interaction primitives milestone
 
 Implemented in Rainbow 0.4: `rainbow-radio`, `rainbow-radio-group`, `rainbow-switch`, `rainbow-field`, `rainbow-form`, `rainbow-dialog`, and `rainbow-popover`. Dialog/popover positioning and full focus-management hardening remain follow-up overlay work.
+
+
+## Implemented in Rainbow 0.7.0
+
+| Component | Status | Notes |
+|---|---|---|
+| `rainbow-tabs` | Implemented | Light-DOM tabs and panels, automatic/manual activation, orientation-aware keyboard navigation. |
+| `rainbow-accordion` | Implemented | Native `details`/`summary` wrapper with exclusive or multiple-open group behavior. |
+| `rainbow-alert` | Implemented | Info/success/warning/danger variants, live-region mode, optional dismissal. |
