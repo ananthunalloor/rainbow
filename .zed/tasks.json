@@ -1,0 +1,14 @@
+[
+  {
+    "label": "verify",
+    "command": "pnpm verify",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "test:watch",
+    "command": "pnpm test:watch",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": true
+  }
+]

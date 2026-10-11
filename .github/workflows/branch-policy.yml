@@ -1,0 +1,28 @@
+name: Branch Policy
+
+on:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require develop as the only integration source for main
+        env:
+          BASE: ${{ github.event.pull_request.base.ref }}
+          HEAD: ${{ github.head_ref }}
+        run: |
+          if [ "$BASE" = "main" ] && [ "$HEAD" != "develop" ]; then
+            echo 'ERROR: pull requests into main must come from develop.'
+            exit 1
+          fi
+      - name: Validate topic branch name
+        env:
+          HEAD: ${{ github.head_ref }}
+        run: |
+          case "$HEAD" in
+            develop|feature/*|feat/*|fix/*|docs/*|refactor/*|perf/*|test/*|build/*|ci/*|chore/*|release/*) exit 0 ;;
+            *) echo "ERROR: invalid branch name: $HEAD"; exit 1 ;;
+          esac

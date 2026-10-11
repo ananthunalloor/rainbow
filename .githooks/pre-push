@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+set -eu
+
+sh ./tools/validate-branch.sh
+remote="${1:-unknown}"
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main)
+      echo "ERROR: direct pushes to $remote are forbidden for refs/heads/main." >&2
+      echo 'Open a pull request from develop instead.' >&2
+      exit 1
+      ;;
+  esac
+done

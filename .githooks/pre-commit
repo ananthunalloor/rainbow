@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+set -eu
+
+sh ./tools/validate-branch.sh
+pnpm fmt:check
+pnpm lint
+pnpm typecheck

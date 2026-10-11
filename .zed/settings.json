@@ -1,0 +1,20 @@
+{
+  "formatter": {
+    "external": {
+      "command": "pnpm",
+      "arguments": ["exec", "oxfmt", "--stdin-filepath", "{buffer_path}"]
+    }
+  },
+  "format_on_save": "on",
+  "languages": {
+    "TypeScript": {
+      "language_servers": ["vtsls", "oxlint", "..."]
+    },
+    "TSX": {
+      "language_servers": ["vtsls", "oxlint", "..."]
+    },
+    "JavaScript": {
+      "language_servers": ["vtsls", "oxlint", "..."]
+    }
+  }
+}

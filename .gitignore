@@ -1,2 +1,12 @@
 # Git patch files
 *.patch
+
+node_modules/
+dist/
+coverage/
+.vite/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
